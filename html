@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Học Từ Vựng Tiếng Anh</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .card-container {
+            background: #ffffff;
+            width: 320px;
+            padding: 30px 20px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        .counter {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 15px;
+        }
+
+        .flashcard {
+            background: linear-gradient(135deg, #4a90e2, #50e3c2);
+            color: white;
+            border-radius: 12px;
+            padding: 40px 20px;
+            cursor: pointer;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.2s ease;
+        }
+
+        .flashcard:active {
+            transform: scale(0.98);
+        }
+
+        .word {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .meaning {
+            font-size: 18px;
+            margin-top: 10px;
+            color: #f0f0f0;
+            display: none;
+        }
+
+        .hint {
+            font-size: 12px;
+            margin-top: 15px;
+            opacity: 0.7;
+        }
+
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-audio { background-color: #f1f3f5; color: #333; }
+        .btn-audio:hover { background-color: #e9ecef; }
+
+        .btn-next { background-color: #4a90e2; color: white; }
+        .btn-next:hover { background-color: #357abd; }
+
+        .btn-prev { background-color: #6c757d; color: white; }
+        .btn-prev:hover { background-color: #5a6268; }
+    </style>
+</head>
+<body>
+
+    <div class="card-container">
+        <div class="counter" id="counter">Từ 1 / 4</div>
+
+        <!-- Thẻ lật từ vựng -->
+        <div class="flashcard" onclick="latCard()">
+            <div class="word" id="word">Consistency</div>
+            <div class="meaning" id="meaning">Sự kiên trì, tính nhất quán</div>
+            <div class="hint" id="hint">(Nhấn vào thẻ để xem nghĩa)</div>
+        </div>
+
+        <!-- Các nút điều khiển -->
+        <div class="controls">
+            <button class="btn-prev" onclick="tuTruoc()">Lùi</button>
+            <button class="btn-audio" onclick="phatAm()">🔊 Phát âm</button>
+            <button class="btn-next" onclick="tuTiếp()">Tiếp</button>
+        </div>
+    </div>
+
+    <script>
+        // Bạn có thể thêm bớt từ vựng trực tiếp tại danh sách này
+        const danhSachTu = [
+            { word: "Consistency", meaning: "Sự kiên trì, tính nhất quán" },
+            { word: "Discipline", meaning: "Kỷ luật" },
+            { word: "Improvement", meaning: "Sự cải thiện, tiến bộ" },
+            { word: "Perseverance", meaning: "Sự bền bỉ, nhẫn nại" }
+        ];
+
+        let currentIndex = 0;
+        let isShowingMeaning = false;
+
+        function hienThiTu() {
+            document.getElementById("word").textContent = danhSachTu[currentIndex].word;
+            document.getElementById("meaning").textContent = danhSachTu[currentIndex].meaning;
+            document.getElementById("counter").textContent = `Từ ${currentIndex + 1} / ${danhSachTu.length}`;
+            
+            // Ẩn nghĩa khi sang từ mới
+            document.getElementById("meaning").style.display = "none";
+            document.getElementById("hint").style.display = "block";
+            isShowingMeaning = false;
+        }
+
+        function latCard() {
+            const meaningEl = document.getElementById("meaning");
+            const hintEl = document.getElementById("hint");
+
+            if (!isShowingMeaning) {
+                meaningEl.style.display = "block";
+                hintEl.style.display = "none";
+                isShowingMeaning = true;
+            } else {
+                meaningEl.style.display = "none";
+                hintEl.style.display = "block";
+                isShowingMeaning = false;
+            }
+        }
+
+        function phatAm() {
+            const text = danhSachTu[currentIndex].word;
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US'; // Giọng Anh-Mỹ
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function tuTiếp() {
+            currentIndex = (currentIndex + 1) % danhSachTu.length;
+            hienThiTu();
+        }
+
+        function tuTruoc() {
+            currentIndex = (currentIndex - 1 + danhSachTu.length) % danhSachTu.length;
+            hienThiTu();
+        }
+
+        // Khởi chạy ban đầu
+        hienThiTu();
+    </script>
+</body>
+</html>
